@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 dioxus = { workspace = true }
-rxing = "0.7.1"
 ui = { workspace = true }
 
 [features]

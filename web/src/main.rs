@@ -1,7 +1,6 @@
 use dioxus::prelude::*;
 
-use ui::Navbar;
-use views::Home;
+use ui::{Navbar, Scanner};
 
 mod views;
 
@@ -10,7 +9,7 @@ mod views;
 enum Route {
     #[layout(WebNavbar)]
     #[route("/")]
-    Home {},
+    Scanner,
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -39,7 +38,7 @@ fn App() -> Element {
 fn WebNavbar() -> Element {
     rsx! {
         Navbar {
-            Link { to: Route::Home {}, "Home" }
+            Link { to: Route::Scanner, "Home" }
         }
 
         Outlet::<Route> {}

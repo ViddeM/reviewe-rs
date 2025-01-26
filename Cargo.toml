@@ -4,16 +4,16 @@ members = [
     "ui",
     "web",
     "server",
+    "openfoodfacts"
 ]
 
 [workspace.dependencies]
-dioxus = { version = "0.6.0" }
+dioxus = { version = "0.6.0", features = ["router"] }
 
 # workspace
 ui = { path = "ui" }
 server = { path = "server" }
-
-[profile]
+openfoodfacts = { path = "openfoodfacts" }
 
 [profile.wasm-dev]
 inherits = "dev"

@@ -1,4 +1,11 @@
-use dioxus::prelude::*;
+use std::{collections::HashMap, io::Cursor};
+
+use dioxus::{logger::tracing, prelude::*};
+use image::ImageReader;
+use rxing::{
+    common::HybridBinarizer, BinaryBitmap, BufferedImageLuminanceSource, MultiFormatReader, Reader,
+};
+use serde_json::{json, Value};
 
 const SCANNER_CSS: Asset = asset!("/assets/styling/scanner.css");
 
@@ -20,9 +27,22 @@ pub fn Scanner() -> Element {
                         if let Some(file_engine) = evt.files() {
                             let files = file_engine.files();
                             for file_name in &files {
-                                if let Some(file) = file_engine.read_file_to_string(file_name).await
-                                {
-                                    println!("FILE: {file:?}");
+                                if let Some(file) = file_engine.read_file(file_name).await {
+                                    let image = ImageReader::new(Cursor::new(file))
+                                        .with_guessed_format()
+                                        .expect("ASD")
+                                        .decode()
+                                        .expect("PEPE");
+                                    let image = BufferedImageLuminanceSource::new(image);
+                                    let mut bitmap = BinaryBitmap::new(HybridBinarizer::new(image));
+                                    let mut multi_format_reader = MultiFormatReader::default();
+                                    let result = multi_format_reader
+                                        .decode(&mut bitmap)
+                                        .expect("DECODE FAILED");
+                                    tracing::info!(
+                                        "BarCode: {} - {}", result.getBarcodeFormat(), result
+                                        .getText()
+                                    );
                                 }
                             }
                         }
